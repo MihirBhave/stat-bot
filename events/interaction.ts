@@ -3,12 +3,14 @@ import client from "../index.js";
 
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isCommand()) {
-    const command = client.commands.get(interaction.commandName);
+    const options = interaction.options as CommandInteractionOptionResolver;
+    const cmdName = options.getSubcommand()
+      ? options.getSubcommand(true)
+      : interaction.commandName;
+
+    const command = client.commands.get(cmdName);
     if (!command) return;
-    command.run(
-      client,
-      interaction,
-      interaction.options as CommandInteractionOptionResolver
-    );
+
+    command.run(client, interaction, options);
   }
 });

@@ -3,8 +3,6 @@ import {
   ClientOptions,
   Collection,
   ApplicationCommandData,
-  CommandInteraction,
-  CommandInteractionOptionResolver,
 } from "discord.js";
 import { readdirSync } from "node:fs";
 import chalk from "chalk";
@@ -22,56 +20,70 @@ export default class DJS extends Client {
     this.commands = new Collection();
 
     this.loadCommands();
+    this.loadEvents();
   }
 
   loadCommands() {
     const commands: ApplicationCommandData[] = [];
 
-    console.log(chalk.blue("-".repeat(32)));
-    console.log(chalk.bold("Commands"));
-
     readdirSync("./out/commands/").forEach((dir) => {
       readdirSync(`./out/commands/${dir}`).forEach(async (file) => {
+        if (!file.endsWith(".js")) {
+          const mainCommand = {
+            name: file,
+            description: `${file} statistics`,
+            options: [] as any,
+          };
+
+          readdirSync(`./out/commands/${dir}/${file}/`).forEach(async (sub) => {
+            const command = await import(`../commands/${dir}/${file}/${sub}`);
+            const { name, description, options, type } = command.default;
+
+            this.commands.set(name, command.default);
+            mainCommand.options.push({
+              name,
+              description,
+              options,
+              type,
+            });
+          });
+
+          commands.push(mainCommand);
+          return;
+        }
+
         const command = await import(`../commands/${dir}/${file}`);
         const { name, description, options } = command.default;
 
-        this.commands.set(name, command);
+        this.commands.set(name, command.default);
         commands.push({
           name,
           description,
           options,
         });
-
-        console.log(chalk.blue(`Loaded Command - ${chalk.yellow.bold(name)}`));
       });
     });
-
-    console.log(chalk.blue("-".repeat(32)));
 
     this.client.on("ready", async () => {
       await this.client.application?.commands?.set(commands);
 
+      console.log(chalk.green.bold(`${commands.length} Commands Loaded`));
+      console.log(chalk.blue("-".repeat(32)));
+
       this.client.user?.setActivity({
-        name: "Satistics 📈",
+        name: "Statistics 📈",
       });
 
-      console.log(chalk.green.bold("The bot is now online!!"));
+      console.log(chalk.blue.bold("The bot is now online!!"));
     });
-
-    this.loadEvents();
   }
 
   loadEvents() {
     console.log(chalk.blue("-".repeat(32)));
-    console.log("Events");
+    console.log(chalk.yellow.bold("Events Loaded"));
 
     readdirSync("./out/events/").forEach(async (event) => {
       await import(`../events/${event}`);
-      console.log(
-        chalk.blue(
-          `Loaded Event - ${chalk.yellow.bold(event.replace(".js", ""))}`
-        )
-      );
     });
 
     console.log(chalk.blue("-".repeat(32)));

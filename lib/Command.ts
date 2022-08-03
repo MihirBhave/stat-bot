@@ -7,11 +7,12 @@ import {
 import { CommandData } from "../types";
 
 export default class Command {
-  constructor({ name, description, options, run }: CommandData) {
+  constructor({ name, description, options, type, run }: CommandData) {
     return {
       name,
       description,
       options,
+      type,
       run,
     };
   }
