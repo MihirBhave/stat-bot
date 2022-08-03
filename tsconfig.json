@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2015",
+    "outDir": "out",
+    "noImplicitAny": true,
+    "strict": true,
+    "moduleResolution": "node"
+  },
+  "include": ["./index.d.ts"]
+}
