@@ -38,7 +38,7 @@ export default new Command({
     const embed = new EmbedBuilder()
       .setTitle("World Population Statistics")
       .setImage(imageInfo.url)
-      .setColor("NotQuiteBlack");
+      .setColor(client.none as any);
 
     interaction.reply({
       embeds: [embed],

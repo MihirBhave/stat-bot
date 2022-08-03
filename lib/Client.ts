@@ -11,12 +11,14 @@ import { CommandData } from "../types";
 export default class DJS extends Client {
   client: this;
   commands: Collection<string, CommandData>;
+  none: string;
   constructor({ intents }: ClientOptions) {
     super({
       intents,
     });
 
     this.client = this;
+    this.none = "#2F3136";
     this.commands = new Collection();
 
     this.loadCommands();
