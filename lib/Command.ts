@@ -4,17 +4,7 @@ import {
   CommandInteraction,
   CommandInteractionOptionResolver,
 } from "discord.js";
-
-type CommandData = {
-  name: string;
-  description: string;
-  options: ApplicationCommandOption[];
-  run: (
-    client: Client,
-    interaction: CommandInteraction,
-    options: CommandInteractionOptionResolver
-  ) => void;
-};
+import { CommandData } from "../types";
 
 export default class Command {
   constructor({ name, description, options, run }: CommandData) {

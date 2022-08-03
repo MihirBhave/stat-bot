@@ -8,18 +8,7 @@ import {
 } from "discord.js";
 import { readdirSync } from "node:fs";
 import chalk from "chalk";
-
-type CommandData = {
-  name: string;
-  description: string;
-  options: ApplicationCommandData[];
-  run: (
-    client: Client,
-    interaction: CommandInteraction,
-    options: CommandInteractionOptionResolver
-  ) => void;
-};
-
+import { CommandData } from "../types";
 
 export default class DJS extends Client {
   client: this;
@@ -33,18 +22,18 @@ export default class DJS extends Client {
     this.commands = new Collection();
 
     this.loadCommands();
-    this.loadEvents();
   }
 
   loadCommands() {
     const commands: ApplicationCommandData[] = [];
 
     console.log(chalk.blue("-".repeat(32)));
+    console.log(chalk.bold("Commands"));
+
     readdirSync("./out/commands/").forEach((dir) => {
       readdirSync(`./out/commands/${dir}`).forEach(async (file) => {
         const command = await import(`../commands/${dir}/${file}`);
-        console.log(command);
-        const { name, description, options } = command;
+        const { name, description, options } = command.default;
 
         this.commands.set(name, command);
         commands.push({
@@ -57,6 +46,8 @@ export default class DJS extends Client {
       });
     });
 
+    console.log(chalk.blue("-".repeat(32)));
+
     this.client.on("ready", async () => {
       await this.client.application?.commands?.set(commands);
 
@@ -66,10 +57,13 @@ export default class DJS extends Client {
 
       console.log(chalk.green.bold("The bot is now online!!"));
     });
+
+    this.loadEvents();
   }
 
   loadEvents() {
     console.log(chalk.blue("-".repeat(32)));
+    console.log("Events");
 
     readdirSync("./out/events/").forEach(async (event) => {
       await import(`../events/${event}`);
@@ -79,6 +73,8 @@ export default class DJS extends Client {
         )
       );
     });
+
+    console.log(chalk.blue("-".repeat(32)));
   }
 
   start() {
