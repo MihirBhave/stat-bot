@@ -11,21 +11,24 @@ export default new Command({
   run: async (client, interaction, options) => {
     const api = "https://world-population.p.rapidapi.com/worldpopulation";
 
-    // axios.get(api, {
-    //   responseType: "json",
-    //   headers: {
-    //     "X-RapidAPI-Key": process.env.rapidkey as string,
-    //     "X-RapidAPI-Host": "world-population.p.rapidapi.com",
-    //   },
-    // });
-
     const board = new Board({
       width: 100,
       height: 100,
       points: [
         {
-          x: 50,
-          y: 20,
+          x: 100,
+          y: 400,
+          value: "500",
+        },
+        {
+          x: 300,
+          y: 200,
+          value: "1000",
+        },
+        {
+          x: 400,
+          y: 500,
+          value: "1500",
         },
       ],
     });
