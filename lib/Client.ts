@@ -40,7 +40,7 @@ export default class DJS extends Client {
           readdirSync(`./out/commands/${dir}/${file}/`).forEach(async (sub) => {
             const command = await import(`../commands/${dir}/${file}/${sub}`);
             const { name, description, options, type } = command.default;
-
+            
             this.commands.set(
               `${name}-${file.replace(".js", "")}`,
               command.default
