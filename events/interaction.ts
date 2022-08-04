@@ -5,7 +5,7 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.isCommand()) {
     const options = interaction.options as CommandInteractionOptionResolver;
     const cmdName = options.getSubcommand()
-      ? options.getSubcommand(true)
+      ? `${options.getSubcommand(true)}-${interaction.commandName}`
       : interaction.commandName;
 
     const command = client.commands.get(cmdName);

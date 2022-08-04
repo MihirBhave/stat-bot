@@ -41,7 +41,11 @@ export default class DJS extends Client {
             const command = await import(`../commands/${dir}/${file}/${sub}`);
             const { name, description, options, type } = command.default;
 
-            this.commands.set(name, command.default);
+            this.commands.set(
+              `${name}-${file.replace(".js", "")}`,
+              command.default
+            );
+
             mainCommand.options.push({
               name,
               description,
@@ -67,7 +71,7 @@ export default class DJS extends Client {
     });
 
     this.client.on("ready", async () => {
-      await this.client.application?.commands?.set(commands);
+      await this.client.application?.commands.set(commands);
 
       console.log(chalk.green.bold(`${commands.length} Commands Loaded`));
       console.log(chalk.blue("-".repeat(32)));
