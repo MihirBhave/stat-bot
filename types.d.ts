@@ -13,7 +13,11 @@ declare type CommandData = {
     name: string;
     description: string;
     type: number;
-    required: boolean
+    required?: boolean;
+    choices?: {
+      name: string;
+      value: string;
+    }[]
   }[];
   type?: ApplicationCommandOptionType;
   run: (
