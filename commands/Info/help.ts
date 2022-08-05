@@ -1,3 +1,4 @@
+import { ApplicationCommandOptionType } from "discord.js";
 import Command from "../../lib/Command.js";
 
 export default new Command({

@@ -10,6 +10,36 @@ export default new Command({
   options: [],
   type: ApplicationCommandOptionType.Subcommand,
   run: async (client, interaction, options) => {
+    const api = "https://www.googleapis.com/youtube/v3/search";
+
+    const { data } = await axios.get(api, {
+      params: {
+        key: process.env.youtubeKey,
+        type: "channel",
+        order: "viewCount",
+      },
+    });
+
+    const channels = await Promise.all(
+      data.items.map(async (i: { id: { channelId: string } }) => {
+        const { id } = i;
+
+        const channelApi = "https://www.googleapis.com/youtube/v3/channels";
+        const channel = await axios.get(channelApi, {
+          params: {
+            key: process.env.youtubeKey,
+            id: id.channelId,
+            part: "statistics",
+          },
+        });
+
+        const { statistics } = channel.data.items[0];
+        return statistics.subscriberCount;
+      })
+    );
+
+    console.log(channels);
+
     const board = makeBoard(
       {
         labels: ["DanTDM", "Jacksepticeye", "Doggie"],
@@ -22,8 +52,6 @@ export default new Command({
       },
       "line"
     );
-
-    console.log(board);
 
     const embed = new EmbedBuilder()
       .setTitle("Youtube channel subscribers")
