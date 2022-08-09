@@ -10,6 +10,12 @@ const client = new DJS({
   ],
   partials: [Partials.User],
 });
+// Anti Crash 
+
+process.on("unhandledRejection", (reason, p ) => {
+  console.log(" [antiCrash] :: Unhandled Rejection/Catch ");
+});
+
 
 export default client;
 
